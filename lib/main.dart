@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Model/listModel.dart';
 import 'Model/model.dart';
-import 'cityScreen.dart';
 
 ListModel model = ListModel();
 void main() {
