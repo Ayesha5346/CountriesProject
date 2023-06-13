@@ -36,6 +36,7 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
+  bool loading = true;
   //Future<List<Location>>
   void getData() async {
     const String apiUrl = 'https://countriesnow.space/api/v0.1/countries';
@@ -43,9 +44,12 @@ class _FirstScreenState extends State<FirstScreen> {
 
     var data = json.decode(res.body);
     setState(() {
-      model = ListModel.fromJson(data);
+      if (data != Null) {
+        model = ListModel.fromJson(data);
+        loading = false;
+      }
     });
-    model != Null ? print("model not null") : print('model is null');
+    //model != Null ? print("model not null") : print('model is null');
   }
 
   @override
@@ -75,12 +79,13 @@ class _FirstScreenState extends State<FirstScreen> {
           )
         ],
       ),
-      body: ListView.builder(
-          itemCount: model.data?.length,
-          itemBuilder: (BuildContext context, int index) => CustomListItem(
-
-                obj: model.data![index],
-              )),
+      body: loading == false
+          ? ListView.builder(
+              itemCount: model.data?.length,
+              itemBuilder: (BuildContext context, int index) => CustomListItem(
+                    obj: model.data![index],
+                  ))
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -109,18 +114,13 @@ class CustomListItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[Text(obj.country), Icon(Icons.chevron_right)],
             ),
           ),
-
-
         ),
       ),
-
     );
-
   }
 }
 
