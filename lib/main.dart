@@ -78,6 +78,7 @@ class _FirstScreenState extends State<FirstScreen> {
       body: ListView.builder(
           itemCount: model.data?.length,
           itemBuilder: (BuildContext context, int index) => CustomListItem(
+
                 obj: model.data![index],
               )),
     );
@@ -100,11 +101,26 @@ class CustomListItem extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => CityScreen(city: obj.cities)));
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[Text(obj.country), Icon(Icons.chevron_right)],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 50,
+          color: Colors.blue,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[Text(obj.country), Icon(Icons.chevron_right)],
+            ),
+          ),
+
+
+        ),
       ),
+
     );
+
   }
 }
 
