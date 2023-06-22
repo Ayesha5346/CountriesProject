@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Model/listModel.dart';
 import 'Model/model.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 ListModel model = ListModel();
 void main() {
@@ -84,7 +85,7 @@ class _FirstScreenState extends State<FirstScreen> {
               itemBuilder: (BuildContext context, int index) => CustomListItem(
                     obj: model.data![index],
                   ))
-          : Center(child: CircularProgressIndicator()),
+          : Center(child: FittedBox(child: CircularProgressIndicator())),
     );
   }
 }
@@ -136,11 +137,41 @@ class SearchLocation extends SearchDelegate {
           },
         )
       ];
+
+  List getResults(String query) {
+    List suggestions = ['data'];
+    int i = 0;
+    List tempList = model.data!;
+    int len = tempList.length;
+    print(len);
+    print(query);
+    for (i; i < len; i++) {
+      if (model.data![i].country.toLowerCase() == query.toLowerCase()) {
+        suggestions = tempList[i].cities;
+      }
+    }
+    return suggestions;
+  }
+
+  List getSuggestions(String query) {
+    List suggestions = [];
+    int i = 0;
+    List tempList = model.data!;
+    int len = tempList.length;
+    print(len);
+    print(query);
+    for (i; i < len; i++) {
+      if (model.data![i].country.toLowerCase().contains(query.toLowerCase())) {
+        suggestions.add(tempList[i]);
+      }
+    }
+    print(suggestions);
+    return suggestions;
+  }
+
   @override
-  Widget buildResults(BuildContext context) => Container();
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> suggestions = [];
+  Widget buildResults(BuildContext context) {
+    List suggestions = query.isEmpty ? [] : getResults(query);
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
@@ -149,6 +180,18 @@ class SearchLocation extends SearchDelegate {
           title: Text(suggestion),
           onTap: () {},
         );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List suggestions = query.isEmpty ? [] : getSuggestions(query);
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final suggestion = suggestions[index];
+        return CustomListItem(obj: suggestion);
       },
     );
   }
